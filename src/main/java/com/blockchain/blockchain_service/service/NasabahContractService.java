@@ -4,7 +4,7 @@ import com.blockchain.blockchain_service.dto.Nasabah;
 import org.apache.http.client.ResponseHandler;
 import org.springframework.http.ResponseEntity;
 
-public interface ExecutionContract {
+public interface NasabahContractService {
 
     ResponseEntity<ResponseHandler> addNasabahContract(Nasabah request);
 //    ResponseEntity<ResponseHandler> getNasabahContract(GetNasabah request);

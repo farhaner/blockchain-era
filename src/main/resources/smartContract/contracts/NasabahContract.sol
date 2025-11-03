@@ -34,10 +34,11 @@ contract NasabahContract {
     }
 
     mapping(bytes32 => Nasabah) private nasabahs;
+    mapping(address => Nasabah) private nasabahAddress;  // Data akun tiap alamat
     bytes32[] private nasabahIds;
 
-    event NasabahCreated(bytes32 indexed id, address indexed owner, uint64 nik);
-    event NasabahUpdated(bytes32 indexed id);
+    event NasabahCreated(bytes32 indexed id, address indexed owner, uint64 nik, string fullName, uint256 createTimeStamp);
+    event NasabahUpdated(bytes32 indexed id, address indexed owner, uint256 updateTimeStamp);
 
     function createNasabah(bytes32 id, NasabahInput calldata data) external returns (bytes32) {
         require(!nasabahs[id].exists, "Nasabah already exists");
@@ -58,7 +59,7 @@ contract NasabahContract {
         });
 
         nasabahIds.push(id);
-        emit NasabahCreated(id, msg.sender, data.nik);
+        emit NasabahCreated(id, msg.sender, data.nik, data.fullName, block.timestamp);
         return id;
     }
 
@@ -90,21 +91,6 @@ contract NasabahContract {
         n.bloodType = data.bloodType;
         n.fullAddress = data.fullAddress;
 
-        emit NasabahUpdated(id);
+        emit NasabahUpdated(id, msg.sender, block.timestamp);
     }
-
-//    function getIdsRange(uint256 startIndex, uint256 count) external view returns (uint256[] memory) {
-//        uint256 total = ids.length;
-//        if (startIndex >= total) {
-//            return new uint256 ; // ✅ ini yang benar
-//        }
-//        uint256 end = startIndex + count;
-//        if (end > total) end = total;
-//        uint256 len = end - startIndex;
-//        uint256[] memory slice = new uint256[](len);
-//        for (uint256 i = 0; i < len; i++) {
-//            slice[i] = ids[startIndex + i];
-//        }
-//        return slice;
-//    }
 }
