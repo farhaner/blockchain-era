@@ -11,9 +11,14 @@ contract CustomerContract {
 
     // ===== STRUCTS =====
     struct CustomerCid {
-        string nationalIdentityCard;
-        string taxIdentificationNumber;
-        string paySlip;
+        string identityCopy; // nullable | require residencePermit
+        string residencePermit; // nullable | require identityCopy
+        string incomeProof;
+        string businessDocumentCopy; // nullable
+        string professionalLicense; // nullable
+        string otherBankCreditCardInfo; // nullable
+        string emeraldCustomer; // nullable
+        string taxIdNumber;
     }
 
     struct Customer {
@@ -30,7 +35,7 @@ contract CustomerContract {
         string fullAddress;
         bytes10 validUntil;
         string occupation;
-        string[] cid;
+        CustomerCid cid;
         address owner;
         bool exists;
         bool active;
