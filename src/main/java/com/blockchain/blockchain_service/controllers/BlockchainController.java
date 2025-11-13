@@ -1,47 +1,51 @@
 package com.blockchain.blockchain_service.controllers;
 
+import com.blockchain.blockchain_service.dto.RequestService;
 import com.blockchain.blockchain_service.dto.ResponseService;
+import com.blockchain.blockchain_service.service.ExecutionContract;
 import com.blockchain.blockchain_service.service.IpfsService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "/v1")
+@RequiredArgsConstructor
 public class BlockchainController {
 
     private final IpfsService ipfsService;
+    private final ExecutionContract executionContract;
 
-    public BlockchainController(IpfsService ipfsService) {
-        this.ipfsService = ipfsService;
+    @PostMapping("/create")
+    public ResponseEntity<ResponseService> create(@Valid @RequestBody RequestService request) throws JsonProcessingException {
+        return executionContract.storeData(request);
     }
 
-    @PostMapping(value = "/add")
-    public String addData() {
-        return "null";
+    @PostMapping("/view")
+    public String view() throws JsonProcessingException {
+
+        return "berhasil";
     }
 
-    @GetMapping(value = "/get")
-    public String getData() {
-        return "null";
-    }
 
-    @GetMapping(value = "/getAll")
-    public List<String> getAlldata() {
-        return null;
-    }
-
-    @PostMapping(value = "/update")
-    public String updateData() {
-        return "null";
-    }
-
+    //    IPFS Service
     @PostMapping("/upload")
-    public ResponseEntity<ResponseService> uploadToIpfs(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<ResponseService> upload(@RequestParam("file") MultipartFile file) {
         return ipfsService.uploadFile(file);
     }
+
+    @PostMapping(value = "/getCid")
+    public ResponseEntity<ResponseService> get(@RequestParam String cid) {
+        return ipfsService.getFile(cid);
+    }
+
+    @PostMapping(value = "/getAllCid")
+    public ResponseEntity<ResponseService> pin() {
+        return ipfsService.getAllCid();
+    }
+
 
 }

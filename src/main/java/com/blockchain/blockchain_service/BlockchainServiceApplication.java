@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.File;
+import java.io.IOException;
 
 import static com.blockchain.blockchain_service.utils.ContractGenerator.generate;
 import static com.blockchain.blockchain_service.utils.IpfsDaemonRunner.runnerDaemon;
@@ -15,23 +16,29 @@ import static com.blockchain.blockchain_service.utils.IpfsDaemonRunner.runnerDae
 @Slf4j
 public class BlockchainServiceApplication implements CommandLineRunner {
 
-    @Value("${contract.path}")
+    @Value("${java.wrapper.path}")
     String folderPath;
 
-    @Override
-    public void run(String... args) throws Exception {
-        File file = new File(folderPath);
+    @Value("${contract.path}")
+    String contractPath;
 
-        // Ambil semua file dan folder di dalamnya
+    @Value("${contract.name}")
+    String contractName;
+
+    @Value("${abi.bin.path}")
+    String abibinPath;
+
+    @Override
+    public void run(String... args) throws IOException {
+
+        File file = new File(folderPath);
         File[] files = file.listFiles();
         if (files == null || files.length == 0) {
-            log.info("Generate java wrapper.......");
-            generate("NasabahContract");
+            generate(contractPath, contractName, abibinPath, folderPath);
         } else {
             log.info("Java wrapper is exist bro");
         }
         runnerDaemon();
-        log.info("=============BLOCKCHAIN ACTIVED=============");
     }
 
     public static void main(String[] args) {

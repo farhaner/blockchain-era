@@ -16,9 +16,8 @@ public class IpfsDaemonRunner {
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
-            log.info("IPFS Properties:");
+            log.info("===============Starting Ipfs Daemon===============");
             while ((line = reader.readLine()) != null) {
-//                log.info(line);
                 System.out.println(line);
             }
         } catch (Exception e) {

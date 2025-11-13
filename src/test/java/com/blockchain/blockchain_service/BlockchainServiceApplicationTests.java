@@ -3,9 +3,6 @@ package com.blockchain.blockchain_service;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
-import java.util.List;
-
 @SpringBootTest
 class BlockchainServiceApplicationTests {
 
@@ -18,15 +15,12 @@ class BlockchainServiceApplicationTests {
     @Test
     void contextLoads() {
         try {
-            String url = "src/main/java/com/blockchain/blockchain_service/contract/";
-            File folder = new File(url);
-
-            // Cek apakah folder ada dan memang folder
-            if (!folder.exists() || !folder.isDirectory()) {
-                System.out.println(List.of("Folder tidak ditemukan atau bukan folder: "));
-            }
+            ProcessBuilder pb = new ProcessBuilder("ipfs", "id");
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            System.out.println(exitCode == 0);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(false);
         }
     }
 
