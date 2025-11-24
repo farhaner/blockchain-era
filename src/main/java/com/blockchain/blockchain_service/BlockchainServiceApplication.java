@@ -1,10 +1,9 @@
 package com.blockchain.blockchain_service;
 
+import com.blockchain.blockchain_service.utils.ContractGenerator;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import static com.blockchain.blockchain_service.utils.ContractGenerator.generate;
 
 @SpringBootApplication
 public class BlockchainServiceApplication implements CommandLineRunner {
@@ -16,6 +15,6 @@ public class BlockchainServiceApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Gunakan/aktifkan ketika hanya untuk generate java wrapper
-                 generate("NasabahContract");
+//                 ContractGenerator.generate("NasabahContract");
     }
 }
