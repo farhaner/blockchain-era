@@ -7,8 +7,11 @@ import org.springframework.http.ResponseEntity;
 
 public interface ExecutionContract {
 
-    ResponseEntity<ResponseService> storeData(RequestService request) throws JsonProcessingException;
-//    ResponseEntity<ResponseService> getNasabahContract(RequestService request);
-//    ResponseEntity<ResponseHandler> getAllNasabahContract(GetAllNasabah request);
-//    ResponseEntity<ResponseHandler> updateNasabahContract(UpdateNasabah request);
+    ResponseEntity<ResponseService> storeCustomerContract(RequestService request) throws JsonProcessingException;
+
+    ResponseEntity<ResponseService> getCustomerContract(RequestService request);
+
+    ResponseEntity<ResponseService> getAllCustomerContract();
+
+    ResponseEntity<ResponseService> updateCustomerContract(RequestService request) throws JsonProcessingException;
 }

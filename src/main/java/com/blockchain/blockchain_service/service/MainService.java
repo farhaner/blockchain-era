@@ -7,8 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface MainService {
 
-    ResponseEntity<ResponseService> addNasabah(RequestService request, MultipartFile file);
-//    ResponseEntity<ResponseService> addNasabah(RequestService request);
-//    ResponseEntity<ResponseService> addNasabah(RequestService request);
-//    ResponseEntity<ResponseService> addNasabah(RequestService request);
+    ResponseEntity<ResponseService> addCustomer(String payload, MultipartFile file1, MultipartFile file2,
+                                                MultipartFile file3, MultipartFile file4, MultipartFile file5,
+                                                MultipartFile file6, MultipartFile file7, MultipartFile file8);
 }
