@@ -1,5 +1,6 @@
 package com.blockchain.blockchain_service.service.impl;
 
+import com.blockchain.blockchain_service.dto.IpfsResponse;
 import com.blockchain.blockchain_service.dto.ResponseService;
 import com.blockchain.blockchain_service.service.IpfsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -20,7 +20,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class IpfsServiceImpl implements IpfsService {
 
-//    private final ObjectMapper objectMapper;
     @Value("${ipfs.url.add}")
     private String ipfsUrlAdd;
 
@@ -33,15 +32,13 @@ public class IpfsServiceImpl implements IpfsService {
     @Value("${ipfs.url.list.cid}")
     private String ipfsUrlListCid;
 
-
     OkHttpClient client = new OkHttpClient();
-    ResponseService responseService = new ResponseService();
     ObjectMapper objectMapper = new ObjectMapper();
+    ResponseService responseService = new ResponseService();
+    IpfsResponse ipfsResponse = new IpfsResponse();
 
     @Override
     public ResponseEntity<ResponseService> uploadFile(MultipartFile file) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
         try {
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
@@ -53,20 +50,20 @@ public class IpfsServiceImpl implements IpfsService {
                     .build();
 
             Request request = new Request.Builder()
-                    .url(ipfsUrlAdd + "/add")
+                    .url(ipfsUrlAdd)
                     .post(requestBody)
                     .build();
-
             Response response = client.newCall(request).execute();
 
-            Map ipfsResponse = objectMapper.readValue(response.body().string(), Map.class);
+            ipfsResponse = objectMapper.readValue(response.body().string(), IpfsResponse.class);
+
+            log.info("Response IPFS {}:", ipfsResponse.getHash());
 
             if (response.isSuccessful()) {
-
                 responseService.setStatusCode("000");
                 responseService.setStatus(true);
                 responseService.setMessage("IPFS Upload Success");
-                responseService.setData(ipfsResponse);
+                responseService.setData(ipfsResponse.getHash());
 
                 return ResponseEntity.ok(responseService);
             } else {
@@ -98,30 +95,32 @@ public class IpfsServiceImpl implements IpfsService {
                     .url(ipfsUrlGet + cid)
                     .post(okhttp3.RequestBody.create(new byte[0]))
                     .build();
-
             Response execute = client.newCall(request).execute();
+            log.info("Response IPFS {}:", execute.body().string());
 
             if (execute.isSuccessful()) {
-
                 responseService.setStatusCode("000");
                 responseService.setStatus(true);
                 responseService.setMessage("IPFS Get Success");
                 responseService.setData(execute.body().string());
-                return ResponseEntity.ok(responseService);
 
+                return ResponseEntity.ok(responseService);
             } else {
                 responseService.setStatusCode("901");
                 responseService.setStatus(false);
                 responseService.setMessage("IPFS Get Failed");
                 responseService.setData(null);
+
                 return ResponseEntity.ok(responseService);
             }
         } catch (Exception e) {
             log.error("Error retrieving file from IPFS {}", e);
+
             responseService.setStatusCode("999");
             responseService.setStatus(false);
             responseService.setMessage("General Error");
             responseService.setData(null);
+
             return ResponseEntity.ok(responseService);
         }
     }
@@ -136,7 +135,7 @@ public class IpfsServiceImpl implements IpfsService {
                     .build();
 
             Response execute = client.newCall(request).execute();
-            Map  listCid = objectMapper.readValue(execute.body().string(), Map.class);
+            Map listCid = objectMapper.readValue(execute.body().string(), Map.class);
             if (execute.isSuccessful()) {
 
                 responseService.setStatusCode("000");

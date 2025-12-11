@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.blockchain.blockchain_service.utils.ContractGenerator.generate;
-import static com.blockchain.blockchain_service.utils.IpfsDaemonRunner.runnerDaemon;
+//import static com.blockchain.blockchain_service.utils.IpfsDaemonRunner.runnerDaemon;
 
 @SpringBootApplication
 @Slf4j
@@ -38,7 +38,7 @@ public class BlockchainServiceApplication implements CommandLineRunner {
         } else {
             log.info("Java wrapper is exist bro");
         }
-        runnerDaemon();
+//        runnerDaemon();
     }
 
     public static void main(String[] args) {
