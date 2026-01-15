@@ -1,5 +1,6 @@
 package com.blockchain.blockchain_service.controllers;
 
+import com.blockchain.blockchain_service.dto.IpfsResponse;
 import com.blockchain.blockchain_service.dto.RequestService;
 import com.blockchain.blockchain_service.dto.ResponseService;
 import com.blockchain.blockchain_service.service.ExecutionContract;
@@ -24,14 +25,14 @@ public class BlockchainController {
     @PostMapping(value = "/addCustomer", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseService> addCustomer(
             @RequestPart("payload") String payloadJson,
-            @RequestPart("identityCopy") MultipartFile identityCopy,
-            @RequestPart("residencePermit") MultipartFile residencePermit,
-            @RequestPart("incomeProof") MultipartFile incomeProof,
-            @RequestPart("businessDocumentCopy") MultipartFile businessDocumentCopy,
-            @RequestPart("professionalLicense") MultipartFile professionalLicense,
-            @RequestPart("otherBankCreditCardInfo") MultipartFile otherBankCreditCardInfo,
-            @RequestPart("emeraldCustomer") MultipartFile emeraldCustomer,
-            @RequestPart("taxIdNumber") MultipartFile taxIdNumber
+            @RequestPart(value = "identityCopy")  MultipartFile identityCopy,
+            @RequestPart(value = "residencePermit") MultipartFile residencePermit,
+            @RequestPart(value = "incomeProof") MultipartFile incomeProof,
+            @RequestPart(value = "businessDocumentCopy") MultipartFile businessDocumentCopy,
+            @RequestPart(value = "professionalLicense") MultipartFile professionalLicense,
+            @RequestPart(value = "otherBankCreditCardInfo") MultipartFile otherBankCreditCardInfo,
+            @RequestPart(value = "emeraldCustomer") MultipartFile emeraldCustomer,
+            @RequestPart(value = "taxIdNumber", required = false) MultipartFile taxIdNumber
     ) throws JsonProcessingException {
         return mainService.addCustomer(
                 payloadJson,
@@ -47,7 +48,7 @@ public class BlockchainController {
 
     @PostMapping("/getCustomer")
     public ResponseEntity<ResponseService> getCustomer(@RequestBody RequestService request) throws JsonProcessingException {
-        return executionContract.getCustomerContract(request);
+        return executionContract.getCustomerContract(request.getNik());
     }
 
     @PostMapping("/getAllCustomer")
@@ -68,7 +69,7 @@ public class BlockchainController {
 
     @PostMapping("/view")
     public ResponseEntity<ResponseService> view(@RequestBody RequestService request) throws JsonProcessingException {
-        return executionContract.getCustomerContract(request);
+        return executionContract.getCustomerContract(request.getNik());
     }
 
     @PostMapping("/getAll")
@@ -84,8 +85,8 @@ public class BlockchainController {
 
     //    IPFS Service
     @PostMapping("/upload")
-    public ResponseEntity<ResponseService> upload(@RequestParam("file") MultipartFile file) {
-        return ipfsService.uploadFile(file);
+    public IpfsResponse upload(@RequestParam("file") MultipartFile file) {
+        return ipfsService.uploadFile2(file);
     }
 
     @PostMapping(value = "/getCid")

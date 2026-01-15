@@ -10,4 +10,8 @@ public interface MainService {
     ResponseEntity<ResponseService> addCustomer(String payload, MultipartFile file1, MultipartFile file2,
                                                 MultipartFile file3, MultipartFile file4, MultipartFile file5,
                                                 MultipartFile file6, MultipartFile file7, MultipartFile file8);
+
+    ResponseEntity<ResponseService> updateCustomer(String payload, MultipartFile file1, MultipartFile file2,
+                                                   MultipartFile file3, MultipartFile file4, MultipartFile file5,
+                                                   MultipartFile file6, MultipartFile file7, MultipartFile file8);
 }

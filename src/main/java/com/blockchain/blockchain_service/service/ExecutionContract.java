@@ -9,7 +9,7 @@ public interface ExecutionContract {
 
     ResponseEntity<ResponseService> storeCustomerContract(RequestService request) throws JsonProcessingException;
 
-    ResponseEntity<ResponseService> getCustomerContract(RequestService request);
+    ResponseEntity<ResponseService> getCustomerContract(String request);
 
     ResponseEntity<ResponseService> getAllCustomerContract();
 

@@ -8,7 +8,7 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IpfsResponse {
 
-    @JsonProperty("Name")
+    @JsonProperty("Name") 
     private String name;
     @JsonProperty("Hash")
     private String hash;

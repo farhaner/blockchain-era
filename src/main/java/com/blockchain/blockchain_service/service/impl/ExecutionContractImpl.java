@@ -54,10 +54,10 @@ public class ExecutionContractImpl implements ExecutionContract {
                     cid
             );
 
-
             contractResponse = customerContract
                     .createCustomer(customer)
                     .send();
+//            objectMapper.readValue(contractResponse, BlockchainResponse.class);
             String s = objectMapper.writeValueAsString(contractResponse);
             log.info("contractResponse: {}", s);
 
@@ -73,24 +73,23 @@ public class ExecutionContractImpl implements ExecutionContract {
 
             responseService.setStatusCode("999");
             responseService.setStatus(false);
-            responseService.setMessage("General Error");
+            responseService.setMessage(e.getMessage());
             responseService.setData(null);
 
             return ResponseEntity.ok(responseService);
         }
     }
 
-    public ResponseEntity<ResponseService> getCustomerContract(RequestService request) {
+    public ResponseEntity<ResponseService> getCustomerContract(String nik) {
         RequestService responseServer = new RequestService();
+        responseServer.setCid(new CidRequest());
         ResponseService responseService = new ResponseService();
-        String nik = request.getNik();
-        responseServer.setCid(new CidRequest());  // <-- ini penting
 
         try {
             CustomerContract.Customer result = customerContract
                     .getCustomer(nik)
                     .send();
-            log.info("getData: {}", result);
+            log.info("getData: {}", result.getValue().toString());
 
             responseServer.setNik(result.nik);
             responseServer.setFullName(result.fullName);
@@ -121,7 +120,7 @@ public class ExecutionContractImpl implements ExecutionContract {
 
             responseService.setStatusCode("999");
             responseService.setStatus(false);
-            responseService.setMessage("General Error: ".concat(e.getMessage()));
+            responseService.setMessage(e.getMessage());
             responseService.setData(null);
 
             return ResponseEntity.ok(responseService);
@@ -133,7 +132,6 @@ public class ExecutionContractImpl implements ExecutionContract {
 
             List getAllResponse = customerContract.getAllCustomerNiks().send();
             log.info("response: {}", getAllResponse);
-
             responseService.setStatusCode("000");
             responseService.setStatus(true);
             responseService.setMessage("Success");
@@ -145,7 +143,7 @@ public class ExecutionContractImpl implements ExecutionContract {
 
             responseService.setStatusCode("999");
             responseService.setStatus(false);
-            responseService.setMessage("General Error: ".concat(e.getMessage()));
+            responseService.setMessage(e.getMessage());
             responseService.setData(null);
 
             return ResponseEntity.ok(responseService);
@@ -154,9 +152,8 @@ public class ExecutionContractImpl implements ExecutionContract {
 
     @Override
     public ResponseEntity<ResponseService> updateCustomerContract(RequestService request) throws JsonProcessingException {
-        RequestService requestService = new RequestService();
         try {
-            ResponseEntity<ResponseService> findCustomerContract = getCustomerContract(request);
+            ResponseEntity<ResponseService> findCustomerContract = getCustomerContract(request.getNik());
             log.info("findCustomerContract: {}", findCustomerContract.getBody().getStatusCode());
             if (findCustomerContract.getBody().getStatusCode().equals("000")) {
                 CustomerContract.CustomerCid cid = new CustomerContract.CustomerCid(

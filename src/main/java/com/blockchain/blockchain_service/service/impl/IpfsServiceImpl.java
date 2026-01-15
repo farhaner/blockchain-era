@@ -38,7 +38,8 @@ public class IpfsServiceImpl implements IpfsService {
     IpfsResponse ipfsResponse = new IpfsResponse();
 
     @Override
-    public ResponseEntity<ResponseService> uploadFile(MultipartFile file) {
+    public IpfsResponse uploadFile2(MultipartFile file) {
+        IpfsResponse ipfsResponse1 = new IpfsResponse();
         try {
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
@@ -56,35 +57,31 @@ public class IpfsServiceImpl implements IpfsService {
             Response response = client.newCall(request).execute();
 
             ipfsResponse = objectMapper.readValue(response.body().string(), IpfsResponse.class);
-
-            log.info("Response IPFS {}:", ipfsResponse.getHash());
+            log.info("Response IPFS {}:", ipfsResponse);
 
             if (response.isSuccessful()) {
-                responseService.setStatusCode("000");
-                responseService.setStatus(true);
-                responseService.setMessage("IPFS Upload Success");
-                responseService.setData(ipfsResponse.getHash());
+                ipfsResponse1.setHash(ipfsResponse.getHash());
+                ipfsResponse1.setName(ipfsResponse.getName());
+                ipfsResponse1.setSize(ipfsResponse.getSize());
 
-                return ResponseEntity.ok(responseService);
+                return ipfsResponse1;
             } else {
                 log.error("IPFS Upload Failed: {}", response.message());
 
-                responseService.setStatusCode("901");
-                responseService.setStatus(false);
-                responseService.setMessage("IPFS Upload Failed");
-                responseService.setData(null);
+                ipfsResponse1.setHash(ipfsResponse.getHash());
+                ipfsResponse1.setName(ipfsResponse.getName());
+                ipfsResponse1.setSize(ipfsResponse.getSize());
 
-                return ResponseEntity.ok(responseService);
+                return ipfsResponse1;
             }
         } catch (IOException e) {
             log.error("Error uploading to IPFS", e);
 
-            responseService.setStatusCode("999");
-            responseService.setStatus(false);
-            responseService.setMessage("General Error");
-            responseService.setData(null);
+            ipfsResponse1.setHash(null);
+            ipfsResponse1.setName(null);
+            ipfsResponse1.setSize(null);
 
-            return ResponseEntity.ok(responseService);
+            return ipfsResponse1;
         }
     }
 
